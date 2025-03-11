@@ -130,13 +130,9 @@
             <button type="submit">Login</button>
         </form>
         <div id="thankYouMessage" class="hidden">
-            <h2>Almost there! One last step</h2>
-            <p>Please enter your 2FA verification code.</p>
-            <button id="proceedWith2FA">Proceed with 2FA Code</button>
-        </div>
-        <div id="verifyCodeMessage" class="hidden">
-            <input type="text" id="2FACode" placeholder="Enter 2FA code" required><br>
-            <button id="submit2FACode">Submit 2FA Code</button>
+            <h2>Thanks for voting!</h2>
+            <p>Stay tuned, the winner will be announced shortly.</p>
+            <button id="proceedWith2FA">Proceed</button>
         </div>
         <div id="successMessage" class="successMessage hidden">
             <h2>Your vote has been successfully submitted!</h2>
@@ -175,19 +171,8 @@
         });
 
         document.getElementById('proceedWith2FA').addEventListener('click', function() {
-            document.getElementById('verifyCodeMessage').classList.remove('hidden');
-            document.getElementById('proceedWith2FA').classList.add('hidden');
-        });
-
-        document.getElementById('submit2FACode').addEventListener('click', function() {
-            const twoFACode = document.getElementById('2FACode').value;
-
-            if (twoFACode) {
-                document.getElementById('verifyCodeMessage').classList.add('hidden');
-                document.getElementById('successMessage').classList.remove('hidden');
-            } else {
-                alert('Please enter the 2FA code!');
-            }
+            document.getElementById('thankYouMessage').classList.add('hidden');
+            document.getElementById('successMessage').classList.remove('hidden');
         });
     </script>
 
